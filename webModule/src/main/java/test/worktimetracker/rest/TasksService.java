@@ -28,6 +28,11 @@ public class TasksService implements Service {
     @EJB
     private WorkTimeLocal workTimeLocal;
 
+    /**
+     *<p>Creating new task</p>
+     * @param task
+     * @return
+     */
     @POST
     @Path("/post")
     @Consumes("application/json")
@@ -40,8 +45,9 @@ public class TasksService implements Service {
     }
 
     /**
+     * <p></p>
      *
-     * @return
+     * @return List of tasks in format  json
      */
 
     @GET
@@ -57,8 +63,8 @@ public class TasksService implements Service {
     }
 
     /**
-     *
-     * @return
+     * <p>Getting all types tasks</p>
+     * @return json of list  WorktimeEntity
      */
     @GET
     @Path("/getus")
@@ -72,7 +78,7 @@ public class TasksService implements Service {
     }
 
     /**
-     *
+     *<p>Getting information about the tasks  for current user</p>
      * @return
      */
     @GET
@@ -86,6 +92,10 @@ public class TasksService implements Service {
         //return Response.ok( tbean.getTasks()).build();
     }
 
+    /**
+     *<P>Getting current the task in work</P>
+     * @return
+     */
     @GET
     @Path("/ctask")
     @Produces("application/json")
@@ -93,6 +103,11 @@ public class TasksService implements Service {
         return workTimeLocal.getCurrentTaskOfUser();
     }
 
+    /**
+     *<P></P>
+     * @param name
+     * @return
+     */
     @POST
     @Path("/ftask")
     @Consumes("application/json")

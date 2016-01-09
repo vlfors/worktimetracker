@@ -96,12 +96,6 @@
             <scope>compile</scope>
 
         </dependency>
-
-        <!-- The tutorials use the PostgreSQL 9.3.5 database -->
-
-
-
-
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-security</artifactId>

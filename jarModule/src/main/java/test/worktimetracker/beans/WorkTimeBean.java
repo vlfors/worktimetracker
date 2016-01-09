@@ -27,6 +27,10 @@ public class WorkTimeBean implements WorkTimeLocal {
     @EJB
     SessionOfUserLocal sessionUSR;
 
+    /**
+     * <P>Getting information about tasks of the user</P>
+     * @return
+     */
     public List<Object> getInfoAboutTasks(){
         Query queryUserByFirstName = entityManager.createNamedQuery("WorktimeEntity.getInfoAboutTasks");
         queryUserByFirstName.setParameter("idUser", sessionUSR.getCurrentUser());
@@ -35,6 +39,10 @@ public class WorkTimeBean implements WorkTimeLocal {
         return result_t;
     }
 
+    /**
+     * <p>Getting current the task of user</p>
+     * @return TaskEntity (task)
+     */
     public  TaskEntity getCurrentTaskOfUser(){
 
         List<WorktimeEntity> listWT = sessionUSR.getCurrentUser().getWorktimeCollection();
@@ -44,6 +52,11 @@ public class WorkTimeBean implements WorkTimeLocal {
 
         return  null;
     }
+
+    /**
+     * <p>Completion of the task</p>
+     * @param taskName
+     */
     public  void finishTaskOfUser(String taskName){
 
         List<WorktimeEntity> listWT = sessionUSR.getCurrentUser().getWorktimeCollection();
