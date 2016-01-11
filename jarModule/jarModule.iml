@@ -34,6 +34,7 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/site" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
@@ -161,6 +162,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.picketbox:picketbox-infinispan:4.0.7.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.picketbox:picketbox-commons:1.0.0.final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.as:jboss-as-build-config:7.1.1.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.5" level="project" />
   </component>
 </module>

@@ -5,6 +5,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 import test.worktimetracker.beans.SessionOfUserLocal;
 import test.worktimetracker.beans.TaskLocal;
@@ -27,6 +29,9 @@ public class TasksService implements Service {
     private   SessionOfUserLocal sessionus;
     @EJB
     private WorkTimeLocal workTimeLocal;
+
+    //private static final Logger logger = LogManager.getLogger(TasksService.class);
+
 
     /**
      *<p>Creating new task</p>
@@ -113,7 +118,11 @@ public class TasksService implements Service {
     @Consumes("application/json")
     public Response finishTask(String name) {
 
+       // if (name.isEmpty()) {
 
+          //  logger.error("This is error : name is empty " + name);
+         //   return  Response.status(Response.Status.NOT_ACCEPTABLE).entity("").build();
+        //}
         workTimeLocal.finishTaskOfUser(name);
         String result = "Task completed : " + name;
         return Response.status(201).entity(result).build();
