@@ -79,7 +79,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <h1 class="text-center login-title">Sign</h1>
+            <h1 class="text-center login-title">Log in</h1>
             <div class="account-wall">
                 <form t class="form-signin" action="login" method="post">
                     <input type="text" class="form-control" name="j_username" placeholder="Enter name" required autofocus>

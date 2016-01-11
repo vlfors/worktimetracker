@@ -39,7 +39,6 @@ wtApp.factory('updateService', function ($rootScope) {
     var sharedService = {};
     sharedService.updateTasks=function(){
         $rootScope.$broadcast('handleBroadcast');
-
     }
     return sharedService;
 });
@@ -130,6 +129,7 @@ wtApp.controller('ShowCurrentCtrl', ['$scope','$http','$location','updateService
             updateService.updateTasks();
             $location.path("/AddNewTask");
             $scope.ctask = null;
+             $scope.$apply();
 
         })
     }
