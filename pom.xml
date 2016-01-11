@@ -87,14 +87,12 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
             <version>4.3.7.Final</version>
             <scope>compile</scope>
-
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>4.3.7.Final</version>
             <scope>compile</scope>
-
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
@@ -103,14 +101,13 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>2.5</version>
         </dependency>
 
-
     </dependencies>
+
 
 </project>
