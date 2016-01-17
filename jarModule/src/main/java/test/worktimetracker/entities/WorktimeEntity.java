@@ -2,7 +2,6 @@ package test.worktimetracker.entities;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -98,10 +97,7 @@ public class WorktimeEntity implements Serializable {
             return false;
         }
         WorktimeEntity other = (WorktimeEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

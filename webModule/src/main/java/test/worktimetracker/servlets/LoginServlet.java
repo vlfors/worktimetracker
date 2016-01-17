@@ -1,6 +1,6 @@
 package test.worktimetracker.servlets;
 
-import org.apache.catalina.Session;
+
 import test.worktimetracker.beans.SessionOfUserLocal;
 
 import javax.ejb.EJB;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 
 
 /**
@@ -22,21 +22,25 @@ public class LoginServlet extends HttpServlet    {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String user;
 
+        try{
+             user = request.getParameter("j_username");
+            //String pass = request.getParameter("j_password");
+             sessionus.getSession(user);
+           // if (sessionus.getSession(user)!=null){
+            String suffix;
+             if (sessionus.checkStatus())
+                 suffix ="#/AddNewTask";
+             else
+                 suffix ="#/CurrentTask";
+             String redirectUrl = "index.jsp"+suffix;
+             //request.getSession().setAttribute("user_name",user);
+             response.sendRedirect(redirectUrl);
 
-        String user = request.getParameter("j_username");
-        String pass = request.getParameter("j_password");
-        sessionus.getSession(user);
-       // if (sessionus.getSession(user)!=null){
-        String suffix = "";
-         if (sessionus.checkStatus())
-             suffix ="#/AddNewTask";
-         else
-             suffix ="#/CurrentTask";
-         String redirectUrl = "index.jsp"+suffix;
-         //request.getSession().setAttribute("user_name",user);
-         response.sendRedirect(redirectUrl);
-         return;
+        }catch (Exception e){
+           response.sendRedirect("errologin.jsp");
+        }
        // }
     }
 
@@ -51,7 +55,7 @@ public class LoginServlet extends HttpServlet    {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException{
         processRequest(request, response);
     }
 

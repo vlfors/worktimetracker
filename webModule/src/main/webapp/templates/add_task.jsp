@@ -29,6 +29,6 @@
     </form>
 
     {{result1}}
-    {{task}}
+    <!--{{task}}-->
     </div>
 </div>

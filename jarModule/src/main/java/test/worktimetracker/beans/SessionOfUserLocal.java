@@ -5,14 +5,15 @@ package test.worktimetracker.beans;
  */
 
 import test.worktimetracker.entities.UserttEntity;
+import test.worktimetracker.excetion.UserException;
 
 import javax.ejb.*;
 
 @Local
 public interface SessionOfUserLocal {
-    public UserttEntity getSession(String name);
-    public UserttEntity getCurrentUser();
-    public Boolean checkStatus();
-    public Boolean closeSession();
+    UserttEntity getSession(String name) throws UserException;
+    UserttEntity getCurrentUser() throws UserException;
+    Boolean checkStatus() throws UserException;
+    Boolean closeSession() throws UserException;
 
 }

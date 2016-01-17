@@ -57,15 +57,15 @@
 
       <div class="col-lg-3">
       </div>
-      <div class="col-sm-4  pull-right">
-         <a href="logout"class="btn btn btn-danger btn-sm pull-right" >Logout</a>
+      <div class="col-sm-4 pull-right">
+         <a href="logout" class="btn btn btn-danger btn-sm pull-right" >Logout</a>
       </div>
-     </div>
+
   </div>
  </header>
 
 
-        <div ng-view></div>
+      <div ng-view></div>
 
         <!--<div  ng-controller="TaskOfUserCtrl">
             {{lists}}
@@ -76,7 +76,7 @@
  <div class="tasks-div" ng-controller="TasksCtrl">
      <!--<div ng-repeat="model in tasksOfuser">
          {{model[0]}} : {{model[1]}}
-     </div>-->
+         </div>-->
 
     <button ng-click="updateTable()" class="btn btn-info btn-sm">Refresh Data</button>
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
@@ -99,7 +99,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+ </div>
 
 
 </body>

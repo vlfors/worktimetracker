@@ -1,93 +1,108 @@
 package test.worktimetracker.beans;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
+import test.worktimetracker.excetion.TaskException;
+import test.worktimetracker.excetion.UserException;
 
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.math.BigInteger;
 
-/**
- * Created by vlad on 31.12.2015.
- */
 
 /**
  *
  */
-@Stateless
+@Stateless(name="Task")
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class TaskBean implements TaskLocal {
     @PersistenceContext
     private EntityManager entityManager;
     @EJB
     SessionOfUserLocal sessionUSR;
 
-    public List<TaskEntity>  getTasks() {
-        Query queryTaskAll = entityManager.createNamedQuery("TaskEntity.findAll");
+    private static final Log LOG = LogFactory.getLog(TaskBean.class);
 
-        List<TaskEntity> Tasks = queryTaskAll.getResultList();
-        return  Tasks;
-    };
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<TaskEntity>  getTasks() throws TaskException {
+
+            Query queryTaskAll = entityManager.createNamedQuery("TaskEntity.findAll");
+            List<TaskEntity> tasks = (List<TaskEntity>)queryTaskAll.getResultList();
+            return tasks;
+
+
+    }
 
     /**
-     *<p></p>
-     * @return List WorktimeEntitys of User
+     *<p>This method returns list of Tasks. </p>
+     * @return  List<WorktimeEntity>
      */
-    public List<WorktimeEntity> getTasksByUser() {
-        //Query queryUserByFirstName = entityManager.createNamedQuery("TaskEntity.findAll");
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<WorktimeEntity> getTasksByUser() throws TaskException, UserException {
 
-     //   List<WorktimeEntity> Tasks = queryUserByFirstName.getResultList();
         Hibernate.initialize(sessionUSR.getCurrentUser().getWorktimeCollection());
         return  sessionUSR.getCurrentUser().getWorktimeCollection();
-    };
+    }
 
     /**
-     *<p>Create new task </p>
+     *<p>This method creates new task </p>
      * @param task
      */
-    public void newTask(TaskEntity task){
-     if (task==null) return;
-        Query queryUserByFirstName = entityManager.createNamedQuery("TaskEntity.findByTskIname");
-        queryUserByFirstName.setParameter("tskIname", task.getTskIname());
 
-        List<TaskEntity> tasks = queryUserByFirstName.getResultList();
-        if(tasks.isEmpty()){
 
-       // task.setTskIname( sessionUSR.getCurrentUser().getUsrName());
-            entityManager.persist(task);
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void newTask(TaskEntity task) throws TaskException, UserException {
+        if (task == null) {
+            throw new TaskException("Task is empty!");
+        }
+        if (!sessionUSR.checkStatus()) {
+            throw new TaskException("The user got task. He can't get more!");
+        }
+        
+            LOG.debug(task.getTskIname());
+        
+            Query queryUserByFirstName = entityManager.createNamedQuery("TaskEntity.findByTskIname");
+            queryUserByFirstName.setParameter("tskIname", task.getTskIname());
 
+            List<TaskEntity> tasks = (List<TaskEntity>)queryUserByFirstName.getResultList();
+            if(tasks.isEmpty()){
+
+                // task.setTskIname( sessionUSR.getCurrentUser().getUsrName());
+                entityManager.persist(task);
+
+            }
+
+            tasks = (List<TaskEntity>)queryUserByFirstName.getResultList();
+            TaskEntity taskI = tasks.get(0);
+            UserttEntity userI = sessionUSR.getCurrentUser();
+            WorktimeEntity wt = new WorktimeEntity();
+            wt.setTskId(taskI);
+            wt.setUsrId(userI);
+            wt.setWtBegin(BigInteger.valueOf( new Date().getTime()));
+            entityManager.persist(wt);
+            entityManager.refresh(wt);
+            entityManager.flush();
+
+
+
+            //return ;
         }
 
-        tasks = queryUserByFirstName.getResultList();
-        TaskEntity taskI = tasks.get(0);
-        UserttEntity userI = sessionUSR.getCurrentUser();
-        WorktimeEntity wt = new WorktimeEntity();
-        wt.setTskId(taskI);
-        wt.setUsrId(userI);
-        wt.setWtBegin(BigInteger.valueOf( new Date().getTime()));
-        entityManager.persist(wt);
-        entityManager.refresh(wt);
-        entityManager.flush();
+        /**
+         *
+         */
 
-
-
-        //return ;
-    }
-
-    /**
-     *
-     */
-    public void FinishTask(){
-        List<WorktimeEntity> list = sessionUSR.getCurrentUser().getWorktimeCollection();
-
-    }
 }
+
+/**
+ * Created by vlad on 31.12.2015.
+ */

@@ -5,14 +5,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-import org.hibernate.Hibernate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.beans.SessionOfUserLocal;
 import test.worktimetracker.beans.TaskLocal;
 import test.worktimetracker.beans.WorkTimeLocal;
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.WorktimeEntity;
+import test.worktimetracker.exception.WorkTimeException;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +30,7 @@ public class TasksService implements Service {
     @EJB
     private WorkTimeLocal workTimeLocal;
 
-    //private static final Logger logger = LogManager.getLogger(TasksService.class);
+    private static final Log LOG = LogFactory.getLog(TasksService.class);
 
 
     /**
@@ -41,12 +41,16 @@ public class TasksService implements Service {
     @POST
     @Path("/post")
     @Consumes("application/json")
-    public Response createTask(TaskEntity task) {
-
-        tbean.newTask(task);
-        String result = "Task created : " + task.toString();
-        return Response.status(201).entity(result).build();
-
+    public Response createTask(TaskEntity task)throws WorkTimeException {
+        try {
+            tbean.newTask(task);
+            String result = "Task created : " + task.toString();
+            return Response.status(201).entity(result).build();
+        }catch (Exception e){
+            LOG.error(e);
+            throw  new WorkTimeException(e.getMessage(),e);
+        }
+        //return Response.status(400).entity("Error").build();
     }
 
     /**
@@ -60,11 +64,15 @@ public class TasksService implements Service {
     @Produces("application/json")
     //public Response getTasks() {
     public List<TaskEntity> getTasks() {
+        try {
 
-
-       // return tbean.getTasks();
-        return tbean.getTasks();
-        //return Response.ok( tbean.getTasks()).build();
+            // return tbean.getTasks();
+            return tbean.getTasks();
+            //return Response.ok( tbean.getTasks()).build();
+        }catch (Exception e){
+            LOG.error(e);
+        }
+        return null;
     }
 
     /**
@@ -75,11 +83,16 @@ public class TasksService implements Service {
     @Path("/getus")
     @Produces("application/json")
     //public Response getTasks() {
-    public Collection<WorktimeEntity> getTasksByUser() {
+    public Collection<WorktimeEntity> getTasksByUser() throws WorkTimeException {
 
         //Hibernate.initialize(sessionus.getCurrentUser().getWorktimeCollection());
-        return sessionus.getCurrentUser().getWorktimeCollection();
-        //return Response.ok( tbean.getTasks()).build();
+        try{
+            return sessionus.getCurrentUser().getWorktimeCollection();
+        }catch (Exception e){
+            LOG.error(e);
+            throw new WorkTimeException("An error occurred, tasks not found",e);
+        }
+            //return Response.ok( tbean.getTasks()).build();
     }
 
     /**
@@ -90,11 +103,16 @@ public class TasksService implements Service {
     @Path("/info")
     @Produces("application/json")
     //public Response getTasks() {
-    public Collection<Object> getInfo() {
+    public Collection<Object> getInfo() throws WorkTimeException {
 
         //Hibernate.initialize(sessionus.getCurrentUser().getWorktimeCollection());
-        return workTimeLocal.getInfoAboutTasks();
+        try {
+            return workTimeLocal.getInfoAboutTasks();
+        }catch (Exception e){
+            throw  new  WorkTimeException("Tasks not found",e);
+        }
         //return Response.ok( tbean.getTasks()).build();
+      //  return null;
     }
 
     /**
@@ -104,28 +122,42 @@ public class TasksService implements Service {
     @GET
     @Path("/ctask")
     @Produces("application/json")
-    public TaskEntity getCurrentTask(){
-        return workTimeLocal.getCurrentTaskOfUser();
+    public TaskEntity getCurrentTask() throws WorkTimeException{
+        try {
+            return workTimeLocal.getCurrentTaskOfUser();
+        }catch (Exception e){
+            LOG.error(e);
+            throw new WorkTimeException("Current task not found!",e);
+        }
+
     }
 
     /**
-     *<P></P>
-     * @param name
-     * @return
+     *<P>This method  completes the task </P>
+     * @param  name name of the Task
+     * @return Response
      */
     @POST
     @Path("/ftask")
     @Consumes("application/json")
-    public Response finishTask(String name) {
+    public Response finishTask(String name)  throws WorkTimeException {
 
-       // if (name.isEmpty()) {
-
-          //  logger.error("This is error : name is empty " + name);
-         //   return  Response.status(Response.Status.NOT_ACCEPTABLE).entity("").build();
-        //}
-        workTimeLocal.finishTaskOfUser(name);
-        String result = "Task completed : " + name;
-        return Response.status(201).entity(result).build();
+        try {
+            String result;
+            if(name.isEmpty()){
+                throw new WorkTimeException( "Task's name is empty");
+              //  result = "Task's name is empty";
+               // return Response.status(400).entity(result).build();
+            }
+            workTimeLocal.finishTaskOfUser(name);
+            result = "Task completed : " + name;
+            LOG.info(result);
+            return Response.status(201).entity(result).build();
+        }catch (Exception e){
+            LOG.error(e);
+            throw new WorkTimeException("Task not completed", e);
+        }
+       // return Response.status(400).entity("Error").build();
 
     }
 }

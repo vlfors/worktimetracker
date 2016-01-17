@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 
 /**
  * Created by vlad on 30.12.2015.
@@ -23,12 +24,16 @@ public class CurrentUserService implements Service {
         @GET
         @Produces("application/json")
         public UserttEntity getProductInJSON() {
+            try {
 
-            UserttEntity user = sessionus.getCurrentUser();
-            if (user == null) {
-                return null;
+                UserttEntity user = sessionus.getCurrentUser();
+                if (user == null) {
+                    return null;
 
-            } else return user;
+                } else return user;
+            }catch (Exception e){
+                throw new WebApplicationException("");
+            }
         }
 
 

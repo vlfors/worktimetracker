@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Local
 public interface WorkTimeLocal {
-    public List<Object> getInfoAboutTasks();
-    public TaskEntity getCurrentTaskOfUser();
-    public  void finishTaskOfUser(String taskName);
+    List<Object> getInfoAboutTasks()throws  Exception;
+    TaskEntity getCurrentTaskOfUser() throws  Exception;
+    void finishTaskOfUser(String taskName)throws  Exception;
 }

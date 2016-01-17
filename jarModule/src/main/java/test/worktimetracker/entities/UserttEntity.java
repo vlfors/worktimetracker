@@ -5,7 +5,6 @@
 package test.worktimetracker.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -85,10 +84,7 @@ public class UserttEntity implements Serializable {
             return false;
         }
         UserttEntity other = (UserttEntity) object;
-        if ((this.usrId == null && other.usrId != null) || (this.usrId != null && !this.usrId.equals(other.usrId))) {
-            return false;
-        }
-        return true;
+        return !((this.usrId == null && other.usrId != null) || (this.usrId != null && !this.usrId.equals(other.usrId)));
     }
 
     @Override

@@ -76,7 +76,7 @@ ng.module('smart-table')
         var partials = path.split('.');
         var key = partials.pop();
         var parentPath = partials.join('.');
-        var parentObject = $parse(parentPath)(object)
+        var parentObject = $parse(parentPath)(object);
         delete parentObject[key];
         if (Object.keys(parentObject).length == 0) {
           deepDelete(object, parentPath);

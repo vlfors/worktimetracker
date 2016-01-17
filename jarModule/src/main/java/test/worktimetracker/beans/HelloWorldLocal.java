@@ -11,6 +11,6 @@ public interface HelloWorldLocal {
      * @param name
      * @return
      */
-    public String getMessage(String name);
+    String getMessage(String name);
 
 }

@@ -10,7 +10,7 @@
 
     <div ng-controller="ShowCurrentCtrl">
     <form novalidate  >
-       <span style="margin-left: 10px;margin-right:1px">Task: </span> <span style="margin-left: 1px;margin-right:5px">{{ctask.tskIname}}</span>  <button type="submit" ng-click="sendStatus()" class="btn btn-sm btn-primary">Stop</button>
+       <span style="margin-left: 10px;margin-right:1px">Task: </span> <span ng-bind="tname" style="margin-left: 1px;margin-right:5px"></span>  <button type="submit" ng-click="sendStatus()" class="btn btn-sm btn-primary">Stop</button>
 
     </form>
 

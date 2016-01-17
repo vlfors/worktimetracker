@@ -20,15 +20,20 @@ public class LogoutServlet extends HttpServlet{
             throws ServletException, IOException {
 
         // if (sessionus.getSession(user)!=null){
-        String redirectUrl ="";
-        if(sessionus.closeSession()) {
-             redirectUrl = "login.jsp";
+        try {
+
+
+            String redirectUrl;
+            if (sessionus.closeSession()) {
+                redirectUrl = "login.jsp";
+            } else
+                redirectUrl = "errorlogin.jsp";
+            //request.getSession().setAttribute("user_name",user);
+            response.sendRedirect(redirectUrl);
+        }catch (Exception e) {
+            response.sendRedirect("errologin.jsp");
         }
-        else
-            redirectUrl = "errorlogin.jsp";
-        //request.getSession().setAttribute("user_name",user);
-        response.sendRedirect(redirectUrl);
-        return;
+
         // }
 
     }

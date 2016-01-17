@@ -39,8 +39,8 @@ public class TaskEntity implements Serializable {
     public TaskEntity() {
     }
 
-    public TaskEntity(Integer tskId) {
-        this.tskId = tskId;
+    public TaskEntity(String tskIname) {
+        this.tskIname = tskIname;
     }
 
     public Integer getTskId() {
@@ -82,10 +82,7 @@ public class TaskEntity implements Serializable {
             return false;
         }
         TaskEntity other = (TaskEntity) object;
-        if ((this.tskId == null && other.tskId != null) || (this.tskId != null && !this.tskId.equals(other.tskId))) {
-            return false;
-        }
-        return true;
+        return !((this.tskId == null && other.tskId != null) || (this.tskId != null && !this.tskId.equals(other.tskId)));
     }
 
     @Override
