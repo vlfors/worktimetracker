@@ -1,4 +1,7 @@
 package test.worktimetracker.beans;
+/**
+ * Created by vlad on 31.12.2015.
+ */
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,7 +105,3 @@ public class TaskBean implements TaskLocal {
          */
 
 }
-
-/**
- * Created by vlad on 31.12.2015.
- */
