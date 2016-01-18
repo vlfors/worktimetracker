@@ -1,6 +1,8 @@
 package test.worktimetracker.beans;
 
-
+/**
+ * Created by vlad on 03.01.2016.
+ */
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
@@ -18,9 +20,7 @@ import test.worktimetracker.entities.WorktimeEntity;
 import test.worktimetracker.excetion.TaskException;
 import test.worktimetracker.excetion.UserException;
 
-/**
- * Created by vlad on 03.01.2016.
- */
+
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class WorkTimeBean implements WorkTimeLocal {
