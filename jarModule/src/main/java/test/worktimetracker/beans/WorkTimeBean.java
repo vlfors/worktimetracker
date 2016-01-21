@@ -15,8 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.WorktimeEntity;
-import test.worktimetracker.excetion.TaskException;
-import test.worktimetracker.excetion.UserException;
+import test.worktimetracker.exception.TaskException;
+import test.worktimetracker.exception.UserException;
 
 /**
  * Created by vlad on 03.01.2016.

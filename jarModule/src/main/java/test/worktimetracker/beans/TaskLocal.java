@@ -2,8 +2,8 @@ package test.worktimetracker.beans;
 
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.WorktimeEntity;
-import test.worktimetracker.excetion.TaskException;
-import test.worktimetracker.excetion.UserException;
+import test.worktimetracker.exception.TaskException;
+import test.worktimetracker.exception.UserException;
 
 import javax.ejb.Local;
 import java.util.List;

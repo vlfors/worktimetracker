@@ -6,8 +6,8 @@ import org.hibernate.Hibernate;
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
-import test.worktimetracker.excetion.TaskException;
-import test.worktimetracker.excetion.UserException;
+import test.worktimetracker.exception.TaskException;
+import test.worktimetracker.exception.UserException;
 
 
 import javax.ejb.*;
@@ -67,7 +67,7 @@ public class TaskBean implements TaskLocal {
         if (!sessionUSR.checkStatus()) {
             throw new TaskException("The user got task. He can't get more!");
         }
-        
+
             LOG.debug(task.getTskIname());
         
             Query queryUserByFirstName = entityManager.createNamedQuery("TaskEntity.findByTskIname");

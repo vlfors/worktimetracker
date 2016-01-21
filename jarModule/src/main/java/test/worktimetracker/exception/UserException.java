@@ -1,4 +1,4 @@
-package test.worktimetracker.excetion;
+package test.worktimetracker.exception;
 
 /**
  * Created by vlad on 16.01.2016.

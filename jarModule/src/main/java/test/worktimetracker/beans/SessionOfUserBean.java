@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
-import test.worktimetracker.excetion.UserException;
+import test.worktimetracker.exception.UserException;
 
 
 import javax.persistence.EntityManager;
@@ -24,13 +24,13 @@ import javax.ejb.*;
 
 
 @Startup
-@Singleton(name="SessionOfUser")
+@Singleton
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class SessionOfUserBean implements SessionOfUserLocal {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private UserttEntity user = null;
+    private volatile UserttEntity user = null;
 
     private static final Log LOG = LogFactory.getLog(SessionOfUserBean.class);
     /**
@@ -38,7 +38,7 @@ public class SessionOfUserBean implements SessionOfUserLocal {
      * @param name  user's name
      * @return
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public UserttEntity getSession ( String name ) throws UserException {
 
 
@@ -122,6 +122,7 @@ public class SessionOfUserBean implements SessionOfUserLocal {
      *
      * @return
      */
+    @Remove
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Boolean closeSession ( ) throws UserException {
         try {

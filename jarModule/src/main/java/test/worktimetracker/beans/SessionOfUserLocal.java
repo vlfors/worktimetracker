@@ -5,7 +5,7 @@ package test.worktimetracker.beans;
  */
 
 import test.worktimetracker.entities.UserttEntity;
-import test.worktimetracker.excetion.UserException;
+import test.worktimetracker.exception.UserException;
 
 import javax.ejb.*;
 
