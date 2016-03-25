@@ -1,6 +1,7 @@
 package test.worktimetracker.beans;
 
 import test.worktimetracker.entities.TaskEntity;
+import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
 import test.worktimetracker.exception.TaskException;
 import test.worktimetracker.exception.UserException;
@@ -14,7 +15,7 @@ import java.util.List;
 @Local
 public interface TaskLocal {
     List<TaskEntity>  getTasks() throws TaskException;
-    void newTask(TaskEntity task) throws TaskException, UserException;
+    void newTask(TaskEntity task,Integer id) throws TaskException, UserException;
     //TEST
-    List<WorktimeEntity> getTasksByUser()  throws TaskException, UserException;
+    List<WorktimeEntity> getTasksByUser(UserttEntity user)  throws TaskException, UserException;
 }

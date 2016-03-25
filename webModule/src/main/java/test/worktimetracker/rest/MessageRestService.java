@@ -8,15 +8,21 @@ import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.beans.SessionOfUserLocal;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.exception.WorkTimeException;
+import test.worktimetracker.servlets.CheckSession;
 
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("/message")
 public class MessageRestService implements Service {
+
+    @Context
+    HttpServletRequest servletRequest;
 
     @EJB
     private SessionOfUserLocal sessionus;
@@ -27,7 +33,7 @@ public class MessageRestService implements Service {
     @Path("/{param}")
     public Response printMessage(@PathParam("param") String msg) throws WorkTimeException {
         try {
-            UserttEntity user = sessionus.getCurrentUser();
+            UserttEntity user = new CheckSession().checkSession(servletRequest);
 
             String res;
             res = user == null ? "empty" : user.getUsrName();

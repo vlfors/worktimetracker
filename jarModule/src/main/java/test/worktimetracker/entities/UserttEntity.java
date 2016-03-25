@@ -4,12 +4,12 @@
  */
 package test.worktimetracker.entities;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
         @NamedQuery(name = "UserttEntity.findByUsrName", query = "SELECT u FROM UserttEntity u WHERE UPPER( u.usrName) = UPPER(:usrName)"),
         @NamedQuery(name = "UserttEntity.findByUsrEmail", query = "SELECT u FROM UserttEntity u WHERE u.usrEmail = :usrEmail")})
 public class UserttEntity implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usrId",fetch= FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "usrId",fetch= FetchType.EAGER)
     private List<WorktimeEntity> worktimeCollection;
     private static final long serialVersionUID = 1L;
     @Id

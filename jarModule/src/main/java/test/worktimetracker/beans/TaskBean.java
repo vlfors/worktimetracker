@@ -5,21 +5,19 @@ package test.worktimetracker.beans;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
 import test.worktimetracker.entities.TaskEntity;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
 import test.worktimetracker.exception.TaskException;
 import test.worktimetracker.exception.UserException;
 
-
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-import java.math.BigInteger;
 
 
 /**
@@ -50,10 +48,10 @@ public class TaskBean implements TaskLocal {
      * @return  List<WorktimeEntity>
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public List<WorktimeEntity> getTasksByUser() throws TaskException, UserException {
+    public List<WorktimeEntity> getTasksByUser(UserttEntity user) throws TaskException, UserException {
 
-        Hibernate.initialize(sessionUSR.getCurrentUser().getWorktimeCollection());
-        return  sessionUSR.getCurrentUser().getWorktimeCollection();
+        //Hibernate.initialize(sessionUSR.getCurrentUser().getWorktimeCollection());
+        return  user.getWorktimeCollection();
     }
 
     /**
@@ -63,11 +61,12 @@ public class TaskBean implements TaskLocal {
 
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void newTask(TaskEntity task) throws TaskException, UserException {
+    public void newTask(TaskEntity task,Integer id) throws TaskException, UserException {
         if (task == null) {
             throw new TaskException("Task is empty!");
         }
-        if (!sessionUSR.checkStatus()) {
+        UserttEntity user = sessionUSR.getCurrentUser(id);
+        if (!sessionUSR.checkStatus(id)) {
             throw new TaskException("The user got task. He can't get more!");
         }
 
@@ -86,14 +85,15 @@ public class TaskBean implements TaskLocal {
 
             tasks = (List<TaskEntity>)queryUserByFirstName.getResultList();
             TaskEntity taskI = tasks.get(0);
-            UserttEntity userI = sessionUSR.getCurrentUser();
+            UserttEntity userI = user;
             WorktimeEntity wt = new WorktimeEntity();
             wt.setTskId(taskI);
             wt.setUsrId(userI);
             wt.setWtBegin(BigInteger.valueOf( new Date().getTime()));
             entityManager.persist(wt);
-            entityManager.refresh(wt);
             entityManager.flush();
+            entityManager.refresh(wt);
+
 
 
 

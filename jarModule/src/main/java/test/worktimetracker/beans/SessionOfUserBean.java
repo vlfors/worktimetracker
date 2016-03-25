@@ -5,26 +5,21 @@ package test.worktimetracker.beans;
  */
 
 
-
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
 import test.worktimetracker.exception.UserException;
 
-
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.List;
-import javax.ejb.*;
 
 
 @Startup
-@Singleton
+@Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class SessionOfUserBean implements SessionOfUserLocal {
     @PersistenceContext
@@ -81,11 +76,11 @@ public class SessionOfUserBean implements SessionOfUserLocal {
      */
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public UserttEntity getCurrentUser ( ) throws UserException {
+    public UserttEntity getCurrentUser ( Integer id) throws UserException {
         try {
 
             Query queryUserByFirstName = entityManager.createNamedQuery ( "UserttEntity.findByUsrId" );
-            queryUserByFirstName.setParameter ( "usrId", user.getUsrId ( ) );
+            queryUserByFirstName.setParameter ( "usrId",id );
             //List<UserttEntity> users = queryUserByFirstName.getResultList();
             user = ( UserttEntity ) queryUserByFirstName.getSingleResult ( );
 
@@ -101,9 +96,12 @@ public class SessionOfUserBean implements SessionOfUserLocal {
      * @return
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Boolean checkStatus() throws UserException {
+    public Boolean checkStatus(Integer id) throws UserException {
         try {
+            Query queryUserByFirstName = entityManager.createNamedQuery ( "UserttEntity.findByUsrId" );
+            queryUserByFirstName.setParameter ( "usrId",id );
 
+            user = ( UserttEntity ) queryUserByFirstName.getSingleResult ( );
             List<WorktimeEntity> list = user.getWorktimeCollection();
             if (list.isEmpty()) return true;
             for (WorktimeEntity wk : list) {

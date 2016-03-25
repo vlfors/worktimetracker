@@ -1,19 +1,22 @@
 package test.worktimetracker.rest;
 
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import test.worktimetracker.beans.SessionOfUserLocal;
 import test.worktimetracker.beans.TaskLocal;
 import test.worktimetracker.beans.WorkTimeLocal;
 import test.worktimetracker.entities.TaskEntity;
+import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.entities.WorktimeEntity;
 import test.worktimetracker.exception.WorkTimeException;
+import test.worktimetracker.servlets.CheckSession;
 
+import javax.ejb.EJB;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +26,8 @@ import java.util.List;
 
 @Path("/task")
 public class TasksService implements Service {
+    @Context
+    private HttpServletRequest servletRequest;
     @EJB
     private TaskLocal tbean;
     @EJB
@@ -42,15 +47,17 @@ public class TasksService implements Service {
     @Path("/post")
     @Consumes("application/json")
     public Response createTask(TaskEntity task)throws WorkTimeException {
+
         try {
-            tbean.newTask(task);
-            String result = "Task created : " + task.toString();
+            tbean.newTask(task,new  CheckSession().checkSession(servletRequest).getUsrId());
+            String result = "[{\"message\":\"Task created : " + task.toString()+"\"}]";
             return Response.status(201).entity(result).build();
         }catch (Exception e){
             LOG.error(e);
             throw  new WorkTimeException(e.getMessage(),e);
         }
         //return Response.status(400).entity("Error").build();
+
     }
 
     /**
@@ -87,7 +94,10 @@ public class TasksService implements Service {
 
         //Hibernate.initialize(sessionus.getCurrentUser().getWorktimeCollection());
         try{
-            return sessionus.getCurrentUser().getWorktimeCollection();
+            LOG.info("user - "+ "begin!");
+            UserttEntity user = new  CheckSession().checkSession(servletRequest);
+            LOG.info("user - " +user.getUsrName());
+            return  user.getWorktimeCollection();
         }catch (Exception e){
             LOG.error(e);
             throw new WorkTimeException("An error occurred, tasks not found",e);
@@ -107,7 +117,7 @@ public class TasksService implements Service {
 
         //Hibernate.initialize(sessionus.getCurrentUser().getWorktimeCollection());
         try {
-            return workTimeLocal.getInfoAboutTasks();
+            return workTimeLocal.getInfoAboutTasks(new  CheckSession().checkSession(servletRequest));
         }catch (Exception e){
             throw  new  WorkTimeException("Tasks not found",e);
         }
@@ -124,14 +134,45 @@ public class TasksService implements Service {
     @Produces("application/json")
     public TaskEntity getCurrentTask() throws WorkTimeException{
         try {
-            return workTimeLocal.getCurrentTaskOfUser();
+
+            UserttEntity user = new CheckSession().checkSession(servletRequest);
+            TaskEntity task = null;
+            if (user != null) {
+                LOG.info(user.getUsrName());
+                task = workTimeLocal.getCurrentTaskOfUser(user.getUsrId());
+                LOG.info(task.getTskIname());
+
+            }
+            return task;
         }catch (Exception e){
             LOG.error(e);
             throw new WorkTimeException("Current task not found!",e);
         }
 
     }
+    @GET
+    @Path("/cbegin")
+    @Produces("application/json")
+    public BigInteger getBeginTimeExecuteTask() throws WorkTimeException{
+        try {
 
+            UserttEntity user = new CheckSession().checkSession(servletRequest);
+            TaskEntity task = null;
+            BigInteger timeb = null;
+            if (user != null) {
+                LOG.info(user.getUsrName());
+                task = workTimeLocal.getCurrentTaskOfUser(user.getUsrId());
+                timeb = workTimeLocal.getMaxBeginDateTask(task.getTskIname(),user.getUsrId());
+                LOG.info(task.getTskIname());
+
+            }
+            return timeb;
+        }catch (Exception e){
+            LOG.error(e);
+            throw new WorkTimeException("Current task not found!",e);
+        }
+
+    }
     /**
      *<P>This method  completes the task </P>
      * @param  name name of the Task
@@ -149,15 +190,18 @@ public class TasksService implements Service {
               //  result = "Task's name is empty";
                // return Response.status(400).entity(result).build();
             }
-            workTimeLocal.finishTaskOfUser(name);
-            result = "Task completed : " + name;
-            LOG.info(result);
-            return Response.status(201).entity(result).build();
+            UserttEntity user =  new  CheckSession().checkSession(servletRequest);
+            if (user != null) {
+                workTimeLocal.finishTaskOfUser(name, user.getUsrId());
+                result = "[{\"message\":\"Task completed : " + name+"\"}]";
+                LOG.info(result);
+                return Response.status(201).entity(result).build();
+            }
         }catch (Exception e){
             LOG.error(e);
             throw new WorkTimeException("Task not completed", e);
         }
-       // return Response.status(400).entity("Error").build();
-
+        ///return Response.status(400).entity("Error").build();
+        return Response.status(200).entity("").build();
     }
 }

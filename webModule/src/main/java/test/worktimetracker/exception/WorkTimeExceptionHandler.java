@@ -14,7 +14,7 @@ public class WorkTimeExceptionHandler implements ExceptionMapper<WorkTimeExcepti
 
     public Response toResponse(WorkTimeException exception)
     {
-        return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
+        return Response.status(Status.BAD_REQUEST).entity("[{\"message\":\""+ exception.getMessage()+"\"}]").build();
     }
 
 }

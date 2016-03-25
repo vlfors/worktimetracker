@@ -7,13 +7,13 @@ package test.worktimetracker.beans;
 import test.worktimetracker.entities.UserttEntity;
 import test.worktimetracker.exception.UserException;
 
-import javax.ejb.*;
+import javax.ejb.Local;
 
 @Local
 public interface SessionOfUserLocal {
     UserttEntity getSession(String name) throws UserException;
-    UserttEntity getCurrentUser() throws UserException;
-    Boolean checkStatus() throws UserException;
+    UserttEntity getCurrentUser( Integer id) throws UserException;
+    Boolean checkStatus(Integer id) throws UserException;
     Boolean closeSession() throws UserException;
 
 }
